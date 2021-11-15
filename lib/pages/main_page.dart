@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:google_fonts/google_fonts.dart';
 import 'package:memogenerator/blocs/main_bloc.dart';
+import 'package:memogenerator/pages/create_meme_page.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MainPage extends StatefulWidget {
-  final http.Client? client;
-
-  MainPage({Key? key, this.client}) : super(key: key);
+  MainPage({Key? key}) : super(key: key);
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -37,6 +35,21 @@ class _MainPageState extends State<MainPage> {
             style: GoogleFonts.seymourOne(fontSize: 24),
           ),
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => CreateMemePage(),
+            ),
+          );
+          },
+          backgroundColor: AppColors.fuchsia,
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          label: Text("Создать"),
+        ),
         backgroundColor: Colors.white,
         body: SafeArea(
           child: MainPageContent(),
@@ -60,8 +73,6 @@ class MainPageContent extends StatefulWidget {
 class _MainPageContentState extends State<MainPageContent> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("CENTER"),
-    );
+    return Container();
   }
 }
