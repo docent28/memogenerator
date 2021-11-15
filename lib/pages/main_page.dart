@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:memogenerator/blocs/main_bloc.dart';
+import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MainPage extends StatefulWidget {
   final http.Client? client;
@@ -26,6 +28,15 @@ class _MainPageState extends State<MainPage> {
     return Provider.value(
       value: bloc,
       child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: AppColors.lemon,
+          foregroundColor: AppColors.darkGrey,
+          title: Text(
+            "Мемогенератор",
+            style: GoogleFonts.seymourOne(fontSize: 24),
+          ),
+        ),
         backgroundColor: Colors.white,
         body: SafeArea(
           child: MainPageContent(),
