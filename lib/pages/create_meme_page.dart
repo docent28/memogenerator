@@ -162,13 +162,17 @@ class MemeCanvasWidget extends StatelessWidget {
               final memeTexts =
                   snapshot.hasData ? snapshot.data! : const <MemeText>[];
               return LayoutBuilder(builder: (context, constraints) {
-                return Stack(
-                  children: memeTexts.map((memeText) {
-                    return DraggableMemeText(
-                      memeText: memeText,
-                      parentConstraints: constraints,
-                    );
-                  }).toList(),
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: ()=>bloc.deselectMemeText(),
+                  child: Stack(
+                    children: memeTexts.map((memeText) {
+                      return DraggableMemeText(
+                        memeText: memeText,
+                        parentConstraints: constraints,
+                      );
+                    }).toList(),
+                  ),
                 );
               });
             },
