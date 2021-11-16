@@ -1,11 +1,16 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
+import 'package:collection/collection.dart';
 
 class CreateMemeBloc {
-  final memeTextsSubject =
-      BehaviorSubject <List<MemeText>>.seeded(<MemeText>[]);
+  final memeTextsSubject = BehaviorSubject<List<MemeText>>.seeded(<MemeText>[]);
 
+  void addNewText() {
+    memeTextsSubject.add(memeTextsSubject.value..add(MemeText.create()));
+  }
 
+  Stream<List<MemeText>> observeMemeTexts() => memeTextsSubject
+      .distinct((prev, next) => ListEquality().equals(prev, next));
 
   void dispose() {
     memeTextsSubject.close();
