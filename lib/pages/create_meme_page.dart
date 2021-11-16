@@ -173,7 +173,7 @@ class MemeCanvasWidget extends StatelessWidget {
   }
 }
 
-class DraggableMemeText extends StatelessWidget {
+class DraggableMemeText extends StatefulWidget {
   final MemeText memeText;
 
   const DraggableMemeText({
@@ -182,18 +182,34 @@ class DraggableMemeText extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<DraggableMemeText> createState() => _DraggableMemeTextState();
+}
+
+class _DraggableMemeTextState extends State<DraggableMemeText> {
+
+  double top = 0;
+  double left = 0;
+
+  @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
-    return GestureDetector(
-      onTap: () => bloc.selectMemeText(memeText.id),
-      onPanUpdate: (details){
-        print("DRAG UPDATE: ${details.delta}");
-      },
-      child: Text(
-        memeText.text,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 24,
+    return Positioned(
+      top: top,
+      left: left,
+      child: GestureDetector(
+        onTap: () => bloc.selectMemeText(widget.memeText.id),
+        onPanUpdate: (details){
+          setState(() {
+            left = left+details.delta.dx;
+            top = top + details.delta.dy;
+          });
+        },
+        child: Text(
+          widget.memeText.text,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+          ),
         ),
       ),
     );
