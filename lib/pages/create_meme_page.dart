@@ -208,6 +208,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
         behavior: HitTestBehavior.opaque,
         onTap: () => bloc.selectMemeText(widget.memeText.id),
         onPanUpdate: (details) {
+          bloc.selectMemeText(widget.memeText.id);
           setState(() {
             left = calculateLeft(details);
             top = calculateTop(details);
