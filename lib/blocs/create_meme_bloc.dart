@@ -6,7 +6,7 @@ class CreateMemeBloc {
   final memeTextsSubject = BehaviorSubject<List<MemeText>>.seeded(<MemeText>[]);
 
   void addNewText() {
-    memeTextsSubject.add(memeTextsSubject.value..add(MemeText.create()));
+    memeTextsSubject.add([...memeTextsSubject.value, MemeText.create()]);
   }
 
   Stream<List<MemeText>> observeMemeTexts() => memeTextsSubject
