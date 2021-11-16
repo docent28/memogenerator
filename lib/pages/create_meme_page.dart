@@ -196,6 +196,7 @@ class DraggableMemeText extends StatefulWidget {
 class _DraggableMemeTextState extends State<DraggableMemeText> {
   double top = 0;
   double left = 0;
+  final double padding = 8;
 
   @override
   Widget build(BuildContext context) {
@@ -208,8 +209,8 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
         onTap: () => bloc.selectMemeText(widget.memeText.id),
         onPanUpdate: (details) {
           setState(() {
-            left = left + details.delta.dx;
-            top = top + details.delta.dy;
+            left = calculateLeft(details);
+            top = calculateTop(details);
           });
         },
         child: Container(
@@ -217,7 +218,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
             maxWidth: widget.parentConstraints.maxWidth,
             maxHeight: widget.parentConstraints.maxHeight,
           ),
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(padding),
           color: Colors.black12,
           child: Text(
             widget.memeText.text,
@@ -230,6 +231,28 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
         ),
       ),
     );
+  }
+
+  double calculateTop(DragUpdateDetails details) {
+    final rawTop = top + details.delta.dy;
+    if (rawTop < 0) {
+      return 0;
+    }
+    if (rawTop > widget.parentConstraints.maxHeight - padding * 2 - 30) {
+      return widget.parentConstraints.maxHeight - padding * 2 - 30;
+    }
+    return rawTop;
+  }
+
+  double calculateLeft(DragUpdateDetails details) {
+    final rawLeft = left + details.delta.dx;
+    if (rawLeft < 0) {
+      return 0;
+    }
+    if (rawLeft > widget.parentConstraints.maxWidth - padding * 2 - 10) {
+      return widget.parentConstraints.maxWidth - padding * 2 - 10;
+    }
+    return rawLeft;
   }
 }
 
