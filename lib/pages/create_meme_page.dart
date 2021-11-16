@@ -22,6 +22,7 @@ class _CreateMemePageState extends State<CreateMemePage> {
     return Provider.value(
       value: bloc,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: AppColors.lemon,
           foregroundColor: AppColors.darkGrey,
@@ -43,27 +44,57 @@ class _CreateMemePageState extends State<CreateMemePage> {
   }
 }
 
-class EditTextBar extends StatelessWidget implements PreferredSizeWidget {
+class EditTextBar extends StatefulWidget implements PreferredSizeWidget {
   const EditTextBar({Key? key}) : super(key: key);
 
   @override
+  State<EditTextBar> createState() => _EditTextBarState();
+
+  @override
+  Size get preferredSize => Size.fromHeight(68);
+}
+
+class _EditTextBarState extends State<EditTextBar> {
+  final controller = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 16,
         vertical: 6,
       ),
-      child: TextField(
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: AppColors.darkGrey6,
-        ),
+      child: StreamBuilder<MemeText?>(
+        stream: bloc.observeSelectedMemeText(),
+        builder: (context, snapshot) {
+          final MemeText? selectedMemeText =
+              snapshot.hasData ? snapshot.data : null;
+          if (selectedMemeText?.text != controller.text) {
+            controller.text = selectedMemeText?.text ?? "";
+          }
+          return TextField(
+            controller: controller,
+            onChanged: (text) {
+              if (selectedMemeText != null) {
+                bloc.changeMemeText(selectedMemeText.id, text);
+              }
+            },
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: AppColors.darkGrey6,
+            ),
+          );
+        },
       ),
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(68);
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }
 
 class CreateMemePageContent extends StatefulWidget {
@@ -109,6 +140,7 @@ class MemeCanvasWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return Container(
       color: AppColors.darkGrey38,
       padding: const EdgeInsets.all(8),
@@ -117,6 +149,18 @@ class MemeCanvasWidget extends StatelessWidget {
         aspectRatio: 1,
         child: Container(
           color: Colors.white,
+          child: StreamBuilder<List<MemeText>>(
+            initialData: const <MemeText>[],
+            stream: bloc.observeMemeTexts(),
+            builder: (context, snapshot) {
+              final memeTexts =
+                  snapshot.hasData ? snapshot.data! : const <MemeText>[];
+              return Column(
+                children:
+                    memeTexts.map((memeText) => Text(memeText.text)).toList(),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -130,12 +174,12 @@ class AddNewMemeTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return GestureDetector(
-      onTap: () => print("ON ADD NEW TEXT TAPPED"),
+      onTap: () => bloc.addNewText(),
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-              vertical: 8, horizontal: 4),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
