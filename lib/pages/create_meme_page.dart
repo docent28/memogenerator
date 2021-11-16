@@ -74,12 +74,14 @@ class _EditTextBarState extends State<EditTextBar> {
             controller.text = selectedMemeText?.text ?? "";
           }
           return TextField(
+            enabled: selectedMemeText != null,
             controller: controller,
             onChanged: (text) {
               if (selectedMemeText != null) {
                 bloc.changeMemeText(selectedMemeText.id, text);
               }
             },
+            onEditingComplete: () => bloc.deselectMemeText(),
             decoration: InputDecoration(
               filled: true,
               fillColor: AppColors.darkGrey6,
@@ -156,8 +158,12 @@ class MemeCanvasWidget extends StatelessWidget {
               final memeTexts =
                   snapshot.hasData ? snapshot.data! : const <MemeText>[];
               return Column(
-                children:
-                    memeTexts.map((memeText) => Text(memeText.text)).toList(),
+                children: memeTexts.map((memeText) {
+                  return GestureDetector(
+                    onTap: ()=>bloc.selectMemeText(memeText.id),
+                    child: Text(memeText.text),
+                  );
+                }).toList(),
               );
             },
           ),
