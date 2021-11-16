@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:memogenerator/blocs/create_meme_bloc.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -186,7 +187,6 @@ class DraggableMemeText extends StatefulWidget {
 }
 
 class _DraggableMemeTextState extends State<DraggableMemeText> {
-
   double top = 0;
   double left = 0;
 
@@ -197,18 +197,23 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
       top: top,
       left: left,
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: () => bloc.selectMemeText(widget.memeText.id),
-        onPanUpdate: (details){
+        onPanUpdate: (details) {
           setState(() {
-            left = left+details.delta.dx;
+            left = left + details.delta.dx;
             top = top + details.delta.dy;
           });
         },
-        child: Text(
-          widget.memeText.text,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 24,
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          // color: AppColors.darkGrey6,
+          child: Text(
+            widget.memeText.text,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+            ),
           ),
         ),
       ),
@@ -225,6 +230,7 @@ class AddNewMemeTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () => bloc.addNewText(),
       child: Center(
         child: Padding(
