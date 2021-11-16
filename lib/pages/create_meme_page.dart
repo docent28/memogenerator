@@ -153,29 +153,28 @@ class MemeCanvasWidget extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: AspectRatio(
         aspectRatio: 1,
-        child: Container(
-          color: Colors.white,
-          child: StreamBuilder<List<MemeText>>(
-            initialData: const <MemeText>[],
-            stream: bloc.observeMemeTexts(),
-            builder: (context, snapshot) {
-              final memeTexts =
-                  snapshot.hasData ? snapshot.data! : const <MemeText>[];
-              return LayoutBuilder(builder: (context, constraints) {
-                return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: ()=>bloc.deselectMemeText(),
-                  child: Stack(
+        child: GestureDetector(
+          onTap: () => bloc.deselectMemeText(),
+          child: Container(
+            color: Colors.white,
+            child: StreamBuilder<List<MemeText>>(
+              initialData: const <MemeText>[],
+              stream: bloc.observeMemeTexts(),
+              builder: (context, snapshot) {
+                final memeTexts =
+                    snapshot.hasData ? snapshot.data! : const <MemeText>[];
+                return LayoutBuilder(builder: (context, constraints) {
+                  return Stack(
                     children: memeTexts.map((memeText) {
                       return DraggableMemeText(
                         memeText: memeText,
                         parentConstraints: constraints,
                       );
                     }).toList(),
-                  ),
-                );
-              });
-            },
+                  );
+                });
+              },
+            ),
           ),
         ),
       ),
