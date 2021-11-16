@@ -71,7 +71,10 @@ class _EditTextBarState extends State<EditTextBar> {
           final MemeText? selectedMemeText =
               snapshot.hasData ? snapshot.data : null;
           if (selectedMemeText?.text != controller.text) {
-            controller.text = selectedMemeText?.text ?? "";
+            final newText = selectedMemeText?.text ?? "";
+            controller.text = newText;
+            controller.selection =
+                TextSelection.collapsed(offset: newText.length);
           }
           return TextField(
             enabled: selectedMemeText != null,
@@ -157,16 +160,40 @@ class MemeCanvasWidget extends StatelessWidget {
             builder: (context, snapshot) {
               final memeTexts =
                   snapshot.hasData ? snapshot.data! : const <MemeText>[];
-              return Column(
+              return Stack(
                 children: memeTexts.map((memeText) {
-                  return GestureDetector(
-                    onTap: ()=>bloc.selectMemeText(memeText.id),
-                    child: Text(memeText.text),
-                  );
+                  return DraggableMemeText(memeText: memeText);
                 }).toList(),
               );
             },
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class DraggableMemeText extends StatelessWidget {
+  final MemeText memeText;
+
+  const DraggableMemeText({
+    Key? key,
+    required this.memeText,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+    return GestureDetector(
+      onTap: () => bloc.selectMemeText(memeText.id),
+      onPanUpdate: (details){
+        print("DRAG UPDATE: ${details.delta}");
+      },
+      child: Text(
+        memeText.text,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 24,
         ),
       ),
     );
