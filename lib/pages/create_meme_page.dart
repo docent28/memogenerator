@@ -217,22 +217,34 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
             top = calculateTop(details);
           });
         },
-        child: Container(
-          constraints: BoxConstraints(
-            maxWidth: widget.parentConstraints.maxWidth,
-            maxHeight: widget.parentConstraints.maxHeight,
-          ),
-          padding: EdgeInsets.all(padding),
-          color: Colors.black12,
-          child: Text(
-            widget.memeText.text,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 24,
-            ),
-          ),
-        ),
+        child: StreamBuilder<MemeText?>(
+            stream: bloc.observeSelectedMemeText(),
+            builder: (context, snapshot) {
+              final selectedItem = snapshot.hasData ? snapshot.data : null;
+              final selected = widget.memeText.id == selectedItem?.id;
+              return Container(
+                constraints: BoxConstraints(
+                  maxWidth: widget.parentConstraints.maxWidth,
+                  maxHeight: widget.parentConstraints.maxHeight,
+                ),
+                padding: EdgeInsets.all(padding),
+                decoration: BoxDecoration(
+                  color: selected ? AppColors.darkGrey16 : null,
+                  border: Border.all(
+                    color: selected ? AppColors.fuchsia : Colors.transparent,
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  widget.memeText.text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                  ),
+                ),
+              );
+            }),
       ),
     );
   }
