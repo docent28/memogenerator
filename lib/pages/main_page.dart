@@ -38,10 +38,10 @@ class _MainPageState extends State<MainPage> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => CreateMemePage(),
-            ),
-          );
+              MaterialPageRoute(
+                builder: (_) => CreateMemePage(),
+              ),
+            );
           },
           backgroundColor: AppColors.fuchsia,
           icon: Icon(
