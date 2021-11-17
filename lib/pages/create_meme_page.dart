@@ -141,12 +141,12 @@ class _CreateMemePageContentState extends State<CreateMemePageContent> {
           flex: 1,
           child: Container(
             color: Colors.white,
-            child: StreamBuilder<List<MemeText>>(
-                stream: bloc.observeMemeTexts(),
-                initialData: const <MemeText>[],
+            child: StreamBuilder<List<MemeTextWithSelection>>(
+                stream: bloc.observeMemeTextsWithSelection(),
+                initialData: const <MemeTextWithSelection>[],
                 builder: (context, snapshot) {
                   final items =
-                      snapshot.hasData ? snapshot.data! : const <MemeText>[];
+                      snapshot.hasData ? snapshot.data! : const <MemeTextWithSelection>[];
                   return ListView.separated(
                     itemCount: items.length + 1,
                     itemBuilder: (BuildContext context, int index) {
@@ -157,9 +157,10 @@ class _CreateMemePageContentState extends State<CreateMemePageContent> {
                       return Container(
                         height: 48,
                         alignment: Alignment.centerLeft,
+                        color: item.selected ? AppColors.darkGrey16 : null,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          item.text,
+                          item.memeText.text,
                           style: TextStyle(
                             fontSize: 16,
                             color: AppColors.darkGrey,

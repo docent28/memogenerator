@@ -39,9 +39,53 @@ class CreateMemeBloc {
   Stream<MemeText?> observeSelectedMemeText() =>
       selectedMemeTextSubject.distinct();
 
+  Stream<List<MemeTextWithSelection>> observeMemeTextsWithSelection() {
+    return Rx.combineLatest2<List<MemeText>, MemeText?,
+        List<MemeTextWithSelection>>(
+      observeMemeTexts(),
+      observeSelectedMemeText(),
+      (memeText, selectedMemeText) {
+        return memeText.map(
+          (memeText) {
+            return MemeTextWithSelection(
+              memeText: memeText,
+              selected: memeText.id == selectedMemeText?.id,
+            );
+          },
+        ).toList();
+      },
+    );
+  }
+
   void dispose() {
     memeTextsSubject.close();
     selectedMemeTextSubject.close();
+  }
+}
+
+class MemeTextWithSelection {
+  final memeText;
+  final bool selected;
+
+  MemeTextWithSelection({
+    required this.memeText,
+    required this.selected,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MemeTextWithSelection &&
+          runtimeType == other.runtimeType &&
+          memeText == other.memeText &&
+          selected == other.selected;
+
+  @override
+  int get hashCode => memeText.hashCode ^ selected.hashCode;
+
+  @override
+  String toString() {
+    return 'MemeTextWithSelection{memeText: $memeText, selected: $selected}';
   }
 }
 
