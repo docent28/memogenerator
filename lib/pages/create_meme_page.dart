@@ -125,6 +125,7 @@ class CreateMemePageContent extends StatefulWidget {
 class _CreateMemePageContentState extends State<CreateMemePageContent> {
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return Column(
       children: [
         Expanded(
@@ -140,12 +141,44 @@ class _CreateMemePageContentState extends State<CreateMemePageContent> {
           flex: 1,
           child: Container(
             color: Colors.white,
-            child: ListView(
-              children: [
-                const SizedBox(height: 12),
-                const AddNewMemeTextButton(),
-              ],
-            ),
+            child: StreamBuilder<List<MemeText>>(
+                stream: bloc.observeMemeTexts(),
+                initialData: const <MemeText>[],
+                builder: (context, snapshot) {
+                  final items =
+                      snapshot.hasData ? snapshot.data! : const <MemeText>[];
+                  return ListView.separated(
+                    itemCount: items.length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return AddNewMemeTextButton();
+                      }
+                      final item = items[index - 1];
+                      return Container(
+                        height: 48,
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          item.text,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.darkGrey,
+                          ),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return const SizedBox.shrink();
+                      }
+                      return Container(
+                        margin: EdgeInsets.only(left: 16),
+                        height: 1,
+                        color: AppColors.darkGrey,
+                      );
+                    },
+                  );
+                }),
           ),
         ),
       ],
