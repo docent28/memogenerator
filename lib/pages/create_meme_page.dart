@@ -77,18 +77,32 @@ class _EditTextBarState extends State<EditTextBar> {
             controller.selection =
                 TextSelection.collapsed(offset: newText.length);
           }
+          final haveSelected = selectedMemeText != null;
           return TextField(
-            enabled: selectedMemeText != null,
+            enabled: haveSelected,
             controller: controller,
             onChanged: (text) {
-              if (selectedMemeText != null) {
-                bloc.changeMemeText(selectedMemeText.id, text);
+              if (haveSelected) {
+                bloc.changeMemeText(selectedMemeText!.id, text);
               }
             },
             onEditingComplete: () => bloc.deselectMemeText(),
+            cursorColor: AppColors.fuchsia,
             decoration: InputDecoration(
               filled: true,
-              fillColor: AppColors.darkGrey6,
+              hintText: haveSelected ? "Ввести текст" : null,
+              hintStyle: TextStyle(fontSize: 16, color: AppColors.darkGrey38),
+              fillColor:
+                  haveSelected ? AppColors.fuchsia16 : AppColors.darkGrey6,
+              disabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: AppColors.darkGrey38, width: 1),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: AppColors.fuchsia38, width: 1),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: AppColors.fuchsia, width: 2),
+              ),
             ),
           );
         },
