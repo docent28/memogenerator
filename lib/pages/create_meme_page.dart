@@ -154,37 +154,36 @@ class BottomList extends StatelessWidget {
     return Container(
       color: Colors.white,
       child: StreamBuilder<List<MemeTextWithSelection>>(
-          stream: bloc.observeMemeTextsWithSelection(),
-          initialData: const <MemeTextWithSelection>[],
-          builder: (context, snapshot) {
-            final items = snapshot.hasData
-                ? snapshot.data!
-                : const <MemeTextWithSelection>[];
-            return ListView.separated(
-              itemCount: items.length + 1,
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return AddNewMemeTextButton();
-                }
-                final item = items[index - 1];
-                return BottomMemeText(item: item);
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return const SizedBox.shrink();
-                }
-                return BottomSeparator();
-              },
-            );
-          }),
+        stream: bloc.observeMemeTextsWithSelection(),
+        initialData: const <MemeTextWithSelection>[],
+        builder: (context, snapshot) {
+          final items = snapshot.hasData
+              ? snapshot.data!
+              : const <MemeTextWithSelection>[];
+          return ListView.separated(
+            itemCount: items.length + 1,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == 0) {
+                return AddNewMemeTextButton();
+              }
+              final item = items[index - 1];
+              return BottomMemeText(item: item);
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              if (index == 0) {
+                return const SizedBox.shrink();
+              }
+              return BottomSeparator();
+            },
+          );
+        },
+      ),
     );
   }
 }
 
 class BottomSeparator extends StatelessWidget {
-  const BottomSeparator({
-    Key? key,
-  }) : super(key: key);
+  const BottomSeparator({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -223,9 +222,7 @@ class BottomMemeText extends StatelessWidget {
 }
 
 class MemeCanvasWidget extends StatelessWidget {
-  const MemeCanvasWidget({
-    Key? key,
-  }) : super(key: key);
+  const MemeCanvasWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -388,9 +385,7 @@ class MemeTextOnCanvas extends StatelessWidget {
 }
 
 class AddNewMemeTextButton extends StatelessWidget {
-  const AddNewMemeTextButton({
-    Key? key,
-  }) : super(key: key);
+  const AddNewMemeTextButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
