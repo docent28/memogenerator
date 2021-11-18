@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memogenerator/pages/main_page.dart';
+import 'package:memogenerator/presentation/main/main_page.dart';
 
 void main() async {
   runApp(const MyApp());
