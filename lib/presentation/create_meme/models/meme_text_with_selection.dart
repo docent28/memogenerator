@@ -1,5 +1,3 @@
-
-
 import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
 
 class MemeTextWithSelection {
@@ -14,10 +12,10 @@ class MemeTextWithSelection {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is MemeTextWithSelection &&
-              runtimeType == other.runtimeType &&
-              memeText == other.memeText &&
-              selected == other.selected;
+      other is MemeTextWithSelection &&
+          runtimeType == other.runtimeType &&
+          memeText == other.memeText &&
+          selected == other.selected;
 
   @override
   int get hashCode => memeText.hashCode ^ selected.hashCode;
