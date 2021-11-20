@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
 
-class MemeTextWithSelection {
+class MemeTextWithSelection extends Equatable {
   final MemeText memeText;
   final bool selected;
 
@@ -10,18 +11,5 @@ class MemeTextWithSelection {
   });
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MemeTextWithSelection &&
-          runtimeType == other.runtimeType &&
-          memeText == other.memeText &&
-          selected == other.selected;
-
-  @override
-  int get hashCode => memeText.hashCode ^ selected.hashCode;
-
-  @override
-  String toString() {
-    return 'MemeTextWithSelection{memeText: $memeText, selected: $selected}';
-  }
+  List<Object?> get props => [memeText, selected];
 }

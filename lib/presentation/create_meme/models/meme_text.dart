@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:uuid/uuid.dart';
 
-class MemeText {
+class MemeText extends Equatable {
   final String id;
   final String text;
 
@@ -14,18 +15,6 @@ class MemeText {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MemeText &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          text == other.text;
+  List<Object?> get props => [id, text];
 
-  @override
-  int get hashCode => id.hashCode ^ text.hashCode;
-
-  @override
-  String toString() {
-    return 'MemeText{id: $id, text: $text}';
-  }
 }
