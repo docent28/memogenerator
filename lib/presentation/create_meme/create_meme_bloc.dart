@@ -22,12 +22,37 @@ class CreateMemeBloc {
 
   StreamSubscription<MemeTextOffset?>? newMemeTextOffsetSubscription;
   StreamSubscription<bool?>? saveMemeSubscription;
+  StreamSubscription<Meme?>? existentMemeSubscription;
 
   final String id;
 
   CreateMemeBloc({final String? id}) : this.id = id ?? Uuid().v4() {
     print("Got id: $id");
     _subscribeToMemTextOffset();
+    existentMemeSubscription =
+        MemesRepository.getInstance().getMeme(this.id).asStream().listen(
+      (meme) {
+        if (meme == null) {
+          return;
+        }
+        final memeTexts = meme.texts.map((textWithPosition) {
+          return MemeText(id: textWithPosition.id, text: textWithPosition.text);
+        }).toList();
+        final memeTextOffsets = meme.texts.map((textWithPosition) {
+          return MemeTextOffset(
+            id: textWithPosition.id,
+            offset: Offset(
+              textWithPosition.position.left,
+              textWithPosition.position.top,
+            ),
+          );
+        }).toList();
+        memeTextsSubject.add(memeTexts);
+        memeTextOffsetsSubject.add(memeTextOffsets);
+      },
+      onError: (error, stackTrace) =>
+          print("Error in existentMemeSubscription: $error, $stackTrace"),
+    );
   }
 
   void saveMeme() {
@@ -144,5 +169,6 @@ class CreateMemeBloc {
 
     newMemeTextOffsetSubscription?.cancel();
     saveMemeSubscription?.cancel();
+    existentMemeSubscription?.cancel();
   }
 }
