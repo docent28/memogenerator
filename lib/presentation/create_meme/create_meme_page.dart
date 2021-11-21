@@ -304,6 +304,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
           setState(() {
             left = calculateLeft(details);
             top = calculateTop(details);
+            bloc.changeMemeTextOffset(widget.memeText.id, Offset(left, top));
           });
         },
         child: StreamBuilder<MemeText?>(

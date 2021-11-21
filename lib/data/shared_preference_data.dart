@@ -13,7 +13,6 @@ class SharedPreferenceData {
   Future<bool> setMemes(final List<String> memes) async {
     final sp = await SharedPreferences.getInstance();
     final result = sp.setStringList(memeKey, memes);
-    updater.add(null);
     return result;
   }
 
