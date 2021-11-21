@@ -1,11 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:memogenerator/data/models/meme.dart';
+import 'package:memogenerator/data/models/position.dart';
+import 'package:memogenerator/data/models/text_with_position.dart';
+import 'package:memogenerator/data/repositories/memes_repository.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_offset.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_with_selection.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:collection/collection.dart';
+import 'package:uuid/uuid.dart';
 
 class CreateMemeBloc {
   final memeTextsSubject = BehaviorSubject<List<MemeText>>.seeded(<MemeText>[]);
@@ -16,9 +21,38 @@ class CreateMemeBloc {
       BehaviorSubject<MemeTextOffset?>.seeded(null);
 
   StreamSubscription<MemeTextOffset?>? newMemeTextOffsetSubscription;
+  StreamSubscription<bool?>? saveMemeSubscription;
+
+  final String id = Uuid().v4();
 
   CreateMemeBloc() {
     _subscribeToMemTextOffset();
+  }
+
+  void saveMeme() {
+    final memeTexts = memeTextsSubject.value;
+    final memeTextOffsets = memeTextOffsetsSubject.value;
+    final textsWithPositions = memeTexts.map((memeText) {
+      final memeTextPosition =
+          memeTextOffsets.firstWhereOrNull((memeTextOffset) {
+        return memeTextOffset.id == memeText.id;
+      });
+      final position = Position(
+        top: memeTextPosition?.offset.dy ?? 0,
+        left: memeTextPosition?.offset.dx ?? 0,
+      );
+      return TextWithPosition(
+          id: memeText.id, text: memeText.text, position: position);
+    }).toList();
+    final meme = Meme(id: id, texts: textsWithPositions);
+    saveMemeSubscription =
+        MemesRepository.getInstance().addToMemes(meme).asStream().listen(
+      (saved) {
+        print("Meme saved: $saved");
+      },
+      onError: (error, stackTrace) =>
+          print("Error in saveMemeSubscription: $error, $stackTrace"),
+    );
   }
 
   void _subscribeToMemTextOffset() {
@@ -108,5 +142,6 @@ class CreateMemeBloc {
     newMemeTextOffsetSubject.close();
 
     newMemeTextOffsetSubscription?.cancel();
+    saveMemeSubscription?.cancel();
   }
 }
