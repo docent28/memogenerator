@@ -7,6 +7,10 @@ import 'package:memogenerator/resources/app_colors.dart';
 import 'package:provider/provider.dart';
 
 class CreateMemePage extends StatefulWidget {
+  final String? id;
+
+  const CreateMemePage({Key? key, this.id}) : super(key: key);
+
   @override
   _CreateMemePageState createState() => _CreateMemePageState();
 }
@@ -17,7 +21,7 @@ class _CreateMemePageState extends State<CreateMemePage> {
   @override
   void initState() {
     super.initState();
-    bloc = CreateMemeBloc();
+    bloc = CreateMemeBloc(id: widget.id);
   }
 
   @override

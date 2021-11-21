@@ -23,9 +23,10 @@ class CreateMemeBloc {
   StreamSubscription<MemeTextOffset?>? newMemeTextOffsetSubscription;
   StreamSubscription<bool?>? saveMemeSubscription;
 
-  final String id = Uuid().v4();
+  final String id;
 
-  CreateMemeBloc() {
+  CreateMemeBloc({final String? id}) : this.id = id ?? Uuid().v4() {
+    print("Got id: $id");
     _subscribeToMemTextOffset();
   }
 

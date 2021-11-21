@@ -82,11 +82,22 @@ class _MainPageContentState extends State<MainPageContent> {
         final items = snapshot.hasData ? snapshot.data! : const <Meme>[];
         return ListView(
           children: items.map((item) {
-            return Container(
-              height: 48,
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              alignment: Alignment.centerLeft,
-              child: Text(item.id),
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return CreateMemePage(id: item.id);
+                    },
+                  ),
+                );
+              },
+              child: Container(
+                height: 48,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                alignment: Alignment.centerLeft,
+                child: Text(item.id),
+              ),
             );
           }).toList(),
         );
