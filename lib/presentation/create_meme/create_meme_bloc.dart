@@ -30,6 +30,10 @@ class CreateMemeBloc {
   CreateMemeBloc({final String? id}) : this.id = id ?? Uuid().v4() {
     print("Got id: $id");
     _subscribeToMemTextOffset();
+    _subscribeToExistentMeme();
+  }
+
+  void _subscribeToExistentMeme() {
     existentMemeSubscription =
         MemesRepository.getInstance().getMeme(this.id).asStream().listen(
       (meme) {
@@ -147,13 +151,13 @@ class CreateMemeBloc {
         observeMemeTexts(), memeTextOffsetsSubject.distinct(),
         (memeTexts, memeTextOffsets) {
       return memeTexts.map((memeText) {
-        final offset = memeTextOffsets.firstWhereOrNull((memeTextOffsets) {
-          return memeTextOffsets.id == memeText.id;
+        final memeTextOffset = memeTextOffsets.firstWhereOrNull((element) {
+          return element.id == memeText.id;
         });
         return MemeTextWithOffset(
           id: memeText.id,
           text: memeText.text,
-          offset: offset?.offset ?? Offset(0, 0),
+          offset: memeTextOffset?.offset,
         );
       }).toList();
     }).distinct((prev, next) => ListEquality().equals(prev, next));

@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 class MemeTextWithOffset extends Equatable {
   final String id;
   final String text;
-  final Offset offset;
+  final Offset? offset;
 
   MemeTextWithOffset({
     required this.id,
