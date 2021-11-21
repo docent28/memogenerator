@@ -8,7 +8,7 @@ class Position extends Equatable {
   final double top;
   final double left;
 
-  Position({required this.top, required this.left});
+  Position({required this.left, required this.top});
 
   factory Position.fromJson(final Map<String, dynamic> json) =>
       _$PositionFromJson(json);

@@ -1,12 +1,13 @@
 import 'dart:async';
+import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:memogenerator/data/models/meme.dart';
 import 'package:memogenerator/data/models/position.dart';
 import 'package:memogenerator/data/models/text_with_position.dart';
 import 'package:memogenerator/data/repositories/memes_repository.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_offset.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
+import 'package:memogenerator/presentation/create_meme/models/meme_text_with_offset.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_with_selection.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:collection/collection.dart';
@@ -139,6 +140,24 @@ class CreateMemeBloc {
 
   Stream<List<MemeText>> observeMemeTexts() => memeTextsSubject
       .distinct((prev, next) => ListEquality().equals(prev, next));
+
+  Stream<List<MemeTextWithOffset>> observeMemeTextWithOffsets() {
+    return Rx.combineLatest2<List<MemeText>, List<MemeTextOffset>,
+            List<MemeTextWithOffset>>(
+        observeMemeTexts(), memeTextOffsetsSubject.distinct(),
+        (memeTexts, memeTextOffsets) {
+      return memeTexts.map((memeText) {
+        final offset = memeTextOffsets.firstWhereOrNull((memeTextOffsets) {
+          return memeTextOffsets.id == memeText.id;
+        });
+        return MemeTextWithOffset(
+          id: memeText.id,
+          text: memeText.text,
+          offset: offset?.offset ?? Offset(0, 0),
+        );
+      }).toList();
+    }).distinct((prev, next) => ListEquality().equals(prev, next));
+  }
 
   Stream<MemeText?> observeSelectedMemeText() =>
       selectedMemeTextSubject.distinct();
