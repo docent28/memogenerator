@@ -17,5 +17,5 @@ Map<String, dynamic> _$TextWithPositionToJson(TextWithPosition instance) =>
     <String, dynamic>{
       'id': instance.id,
       'text': instance.text,
-      'position': instance.position,
+      'position': instance.position.toJson(),
     };

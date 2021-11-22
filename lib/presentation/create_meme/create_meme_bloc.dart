@@ -20,6 +20,7 @@ class CreateMemeBloc {
       BehaviorSubject<List<MemeTextOffset>>.seeded(<MemeTextOffset>[]);
   final newMemeTextOffsetSubject =
       BehaviorSubject<MemeTextOffset?>.seeded(null);
+  final memePathSubject = BehaviorSubject<String?>.seeded(null);
 
   StreamSubscription<MemeTextOffset?>? newMemeTextOffsetSubscription;
   StreamSubscription<bool?>? saveMemeSubscription;
@@ -27,8 +28,12 @@ class CreateMemeBloc {
 
   final String id;
 
-  CreateMemeBloc({final String? id}) : this.id = id ?? Uuid().v4() {
+  CreateMemeBloc({
+    final String? id,
+    final String? selectedMemePath,
+  }) : this.id = id ?? Uuid().v4() {
     print("Got id: $id");
+    memePathSubject.add(selectedMemePath);
     _subscribeToMemTextOffset();
     _subscribeToExistentMeme();
   }
@@ -54,6 +59,7 @@ class CreateMemeBloc {
         }).toList();
         memeTextsSubject.add(memeTexts);
         memeTextOffsetsSubject.add(memeTextOffsets);
+        memePathSubject.add(meme.memePath);
       },
       onError: (error, stackTrace) =>
           print("Error in existentMemeSubscription: $error, $stackTrace"),
@@ -75,7 +81,11 @@ class CreateMemeBloc {
       return TextWithPosition(
           id: memeText.id, text: memeText.text, position: position);
     }).toList();
-    final meme = Meme(id: id, texts: textsWithPositions);
+    final meme = Meme(
+      id: id,
+      texts: textsWithPositions,
+      memePath: memePathSubject.value,
+    );
     saveMemeSubscription =
         MemesRepository.getInstance().addToMemes(meme).asStream().listen(
       (saved) {
@@ -142,6 +152,8 @@ class CreateMemeBloc {
     selectedMemeTextSubject.add(null);
   }
 
+  Stream<String?> observeMemePath() => memePathSubject.distinct();
+
   Stream<List<MemeText>> observeMemeTexts() => memeTextsSubject
       .distinct((prev, next) => ListEquality().equals(prev, next));
 
@@ -189,6 +201,7 @@ class CreateMemeBloc {
     selectedMemeTextSubject.close();
     memeTextOffsetsSubject.close();
     newMemeTextOffsetSubject.close();
+    memePathSubject.close();
 
     newMemeTextOffsetSubscription?.cancel();
     saveMemeSubscription?.cancel();
