@@ -10,7 +10,7 @@ class Meme extends Equatable {
   final List<TextWithPosition> texts;
   final String? memePath;
 
-  Meme({required this.id, required this.texts, required this.memePath});
+  Meme({required this.id, required this.texts, this.memePath});
 
   factory Meme.fromJson(final Map<String, dynamic> json) =>
       _$MemeFromJson(json);
