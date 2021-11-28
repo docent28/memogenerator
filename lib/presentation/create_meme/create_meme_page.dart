@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -225,7 +226,9 @@ class BottomSeparator extends StatelessWidget {
 }
 
 class BottomMemeText extends StatelessWidget {
-  const BottomMemeText({
+  BottomTextSelected _blocText = BottomTextSelected();
+
+  BottomMemeText({
     Key? key,
     required this.item,
   }) : super(key: key);
@@ -234,19 +237,55 @@ class BottomMemeText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 48,
-      alignment: Alignment.centerLeft,
-      color: item.selected ? AppColors.darkGrey16 : null,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Text(
-        item.memeText.text,
-        style: TextStyle(
-          fontSize: 16,
-          color: AppColors.darkGrey,
-        ),
-      ),
+    return StreamBuilder(
+      stream: _blocText.outputStateStream,
+      initialData: Colors.white,
+      builder: (context, AsyncSnapshot snapshot) {
+        return Container(
+          height: 48,
+          alignment: Alignment.centerLeft,
+          color: item.selected ? AppColors.darkGrey16 : null,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            item.memeText.text,
+            style: TextStyle(
+              fontSize: 16,
+              color: AppColors.darkGrey,
+            ),
+          ),
+        );
+      }
     );
+  }
+}
+
+enum textBottomEvent { event_text }
+
+class BottomTextSelected {
+  Color _colorBottomText = Colors.white;
+
+  final _inputEventController = StreamController<textBottomEvent>();
+  StreamSink<textBottomEvent> get inputEventSink => _inputEventController.sink;
+
+  final _outputStateController = StreamController<Color>();
+  Stream<Color> get outputStateStream => _outputStateController.stream;
+
+  void _mapEventToState(textBottomEvent event) {
+    if (event == textBottomEvent.event_text)
+      _colorBottomText = AppColors.darkGrey;
+    else
+      throw Exception("Wrong Event Type");
+
+    _outputStateController.sink.add(_colorBottomText);
+  }
+
+  BottomTextSelected() {
+    _inputEventController.stream.listen(_mapEventToState);
+  }
+
+  void dispose() {
+    _inputEventController.close();
+    _outputStateController.close();
   }
 }
 
@@ -270,7 +309,7 @@ class MemeCanvasWidget extends StatelessWidget {
                   stream: bloc.observeMemePath(),
                   builder: (context, snapshot) {
                     final path = snapshot.hasData ? snapshot.data : null;
-                    if(path==null){
+                    if (path == null) {
                       return Container(color: Colors.white);
                     }
                     return Image.file(File(path));
