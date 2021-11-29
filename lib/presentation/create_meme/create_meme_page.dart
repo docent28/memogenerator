@@ -237,7 +237,9 @@ class BottomMemeText extends StatelessWidget {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => bloc.selectMemeText(item.memeText.id),
+      onTap: () => {
+        if (item.memeText.id != null) bloc.selectMemeText(item.memeText.id),
+      },
       child: Container(
         height: 48,
         alignment: Alignment.centerLeft,
