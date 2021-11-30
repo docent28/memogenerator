@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:memogenerator/presentation/create_meme/create_meme_bloc.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_with_offset.dart';
@@ -333,16 +334,18 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
         widget.parentConstraints.maxHeight / 2;
     left = widget.memeTextWithOffset.offset?.dx ??
         widget.parentConstraints.maxWidth / 3;
-    Future.delayed(
-      Duration.zero,
-      () {
-        final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
-        bloc.changeMemeTextOffset(
-          widget.memeTextWithOffset.id,
-          Offset(left, top),
-        );
-      },
-    );
+// способ первый
+    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+      final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+      bloc.changeMemeTextOffset(
+          widget.memeTextWithOffset.id, Offset(left, top));
+    });
+// способ второй
+//     Future.delayed(Duration.zero, () {
+//       final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+//       bloc.changeMemeTextOffset(
+//           widget.memeTextWithOffset.id, Offset(left, top));
+//     });
   }
 
   @override
