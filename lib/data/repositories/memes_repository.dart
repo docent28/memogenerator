@@ -19,6 +19,9 @@ class MemesRepository {
 
   Future<bool> addToMemes(final Meme meme) async {
     final rawMemes = await spData.getMemes();
+
+    rawMemes.firstWhereOrNull((element) => Meme.fromJson(json.decode(element)).id== meme.id);
+
     rawMemes.add(json.encode(meme.toJson()));
     return _setRawMemes(rawMemes);
   }
