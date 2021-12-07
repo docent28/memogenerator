@@ -83,7 +83,12 @@ class CreateMemeBloc {
           id: memeText.id, text: memeText.text, position: position);
     }).toList();
 
-    SaveMemeInteractor.getInstance();
+    // SaveMemeInteractor.getInstance()
+
+    saveMemeSubscription = SaveMemeInteractor.getInstance().saveMeme(
+        id: id,
+        textWithPositions: textsWithPositions,
+        imagePath: memePathSubject.value) as StreamSubscription<bool?>?;
 
     // saveMemeSubscription =
     //     _saveMemeInternal(textsWithPositions).asStream().listen(
