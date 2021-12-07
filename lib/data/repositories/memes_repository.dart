@@ -6,7 +6,6 @@ import 'package:memogenerator/data/shared_preference_data.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:collection/collection.dart';
 
-
 class MemesRepository {
   final updater = PublishSubject<Null>();
   final SharedPreferenceData spData;
@@ -20,21 +19,14 @@ class MemesRepository {
 
   Future<bool> addToMemes(final Meme meme) async {
     final rawMemes = await spData.getMemes();
-    //////////////////////////////////////////////
-
-   final findId = rawMemes.firstWhereOrNull((element) => Meme.fromJson(json.decode(element)).id== meme.id);
-   final findIdd = rawMemes.indexOf(json.encode(meme.toJson()));
-   final findIddd = rawMemes.indexOf(meme.toJson().toString());
-
-   // final findIdddd = rawMemes.map((meme){
-   //   var index =    rawMemes.indexOf(meme);
-   //   return Container();
-   // }).toList();
-
-//  .indexOf(json.encode(meme.toJson()));
-
-    /////////////////////////////////////////////
-    rawMemes.add(json.encode(meme.toJson()));
+    final existentMemeIndex =
+        rawMemes.indexWhere((element) => element.contains(meme.id));
+    if (existentMemeIndex > -1) {
+      rawMemes.removeAt(existentMemeIndex);
+      rawMemes.insert(existentMemeIndex, json.encode(meme.toJson()));
+    } else {
+      rawMemes.add(json.encode(meme.toJson()));
+    }
     return _setRawMemes(rawMemes);
   }
 
