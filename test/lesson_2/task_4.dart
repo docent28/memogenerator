@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memogenerator/data/models/meme.dart';
@@ -9,8 +8,11 @@ import 'package:memogenerator/data/models/text_with_position.dart';
 import 'package:memogenerator/data/repositories/memes_repository.dart';
 import 'package:memogenerator/domain/interactors/save_meme_interactor.dart';
 import 'package:memogenerator/presentation/create_meme/create_meme_page.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+
+import 'shared.dart';
 
 ///
 /// 4. Выносим логику с сохранением мема в interactor
@@ -35,17 +37,13 @@ void runTestLesson2Task4() {
   final testPathName = "test";
 
   final taskDocumentsPathName = "task_4_documents";
-  const MethodChannel channel =
-      MethodChannel('plugins.flutter.io/path_provider');
-  channel.setMockMethodCallHandler((MethodCall methodCall) async {
-    final projectPath = Directory("").absolute.path;
-    final correctedPath = projectPath.endsWith(ps)
-        ? projectPath.substring(0, projectPath.length - 1)
-        : projectPath;
-    final docsPath = "$correctedPath$ps$testPathName$ps$taskDocumentsPathName";
-    return docsPath;
+  setUpAll(() {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    PathProviderPlatform.instance = FakePathProviderPlatform(
+      testPathName: testPathName,
+      taskDocumentsPathName: taskDocumentsPathName,
+    );
   });
-  setUpAll(() => GoogleFonts.config.allowRuntimeFetching = false);
   testWidgets('module4', (WidgetTester tester) async {
     await tester.runAsync(() async {
       print(
@@ -58,6 +56,7 @@ void runTestLesson2Task4() {
         await docsDirectory.delete(recursive: true);
       }
       final docsMemesDirectory = Directory("${docsDirectory.path}${ps}memes");
+      print("SHOULD BE ${docsMemesDirectory.absolute.path}");
       final docsMemesPath = docsMemesDirectory.absolute.path;
       final imagesPath =
           Directory("$testPathName${ps}lesson_2${ps}task_4_files")
@@ -165,9 +164,7 @@ void runTestLesson2Task4() {
       );
 
       print("Удаляем папку с файлами, созданными в рамках тестирования");
-      if (docsDirectoryExists) {
-        await docsDirectory.delete(recursive: true);
-      }
+      await docsDirectory.delete(recursive: true);
 
       print("------------- УСПЕХ! Тест пройден! -------------\n");
     });
