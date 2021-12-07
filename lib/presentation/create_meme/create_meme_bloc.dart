@@ -24,7 +24,7 @@ class CreateMemeBloc {
   final memePathSubject = BehaviorSubject<String?>.seeded(null);
 
   StreamSubscription<MemeTextOffset?>? newMemeTextOffsetSubscription;
-  StreamSubscription<bool?>? saveMemeSubscription;
+  StreamSubscription<bool>? saveMemeSubscription;
   StreamSubscription<Meme?>? existentMemeSubscription;
 
   final String id;
@@ -88,7 +88,7 @@ class CreateMemeBloc {
     saveMemeSubscription = SaveMemeInteractor.getInstance().saveMeme(
         id: id,
         textWithPositions: textsWithPositions,
-        imagePath: memePathSubject.value) as StreamSubscription<bool?>?;
+        imagePath: memePathSubject.value).asStream();
 
     // saveMemeSubscription =
     //     _saveMemeInternal(textsWithPositions).asStream().listen(
