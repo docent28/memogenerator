@@ -16,17 +16,31 @@ class MemesRepository {
 
   MemesRepository._internal(this.spData);
 
-  Future<bool> addToMemes(final Meme meme) async {
-    final rawMemes = await spData.getMemes();
-    final existentMemeIndex =
-        rawMemes.indexWhere((element) => element.contains(meme.id));
-    if (existentMemeIndex > -1) {
-      rawMemes.removeAt(existentMemeIndex);
-      rawMemes.insert(existentMemeIndex, json.encode(meme.toJson()));
+  // способ один
+  // Future<bool> addToMemes(final Meme meme) async {
+  //   final rawMemes = await spData.getMemes();
+  //   final existentMemeIndex =
+  //       rawMemes.indexWhere((element) => element.contains(meme.id));
+  //   if (existentMemeIndex > -1) {
+  //     rawMemes.removeAt(existentMemeIndex);
+  //     rawMemes.insert(existentMemeIndex, json.encode(meme.toJson()));
+  //   } else {
+  //     rawMemes.add(json.encode(meme.toJson()));
+  //   }
+  //   return _setRawMemes(rawMemes);
+  // }
+
+  // способ два
+  Future<bool> addToMemes(final Meme newMeme) async {
+    final memes = await getMemes();
+    final memeIndex = memes.indexWhere((meme) => meme.id == newMeme.id);
+    if (memeIndex == -1) {
+      memes.add(newMeme);
     } else {
-      rawMemes.add(json.encode(meme.toJson()));
+      memes.removeAt(memeIndex);
+      memes.insert(memeIndex, newMeme);
     }
-    return _setRawMemes(rawMemes);
+    return _setMemes(memes);
   }
 
   Future<bool> removeFromMemes(final String id) async {
