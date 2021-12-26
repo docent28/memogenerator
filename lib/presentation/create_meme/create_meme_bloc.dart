@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
@@ -11,6 +12,7 @@ import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_offset.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_with_offset.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_with_selection.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
@@ -60,7 +62,15 @@ class CreateMemeBloc {
         }).toList();
         memeTextsSubject.add(memeTexts);
         memeTextOffsetsSubject.add(memeTextOffsets);
-        memePathSubject.add(meme.memePath);
+        if (meme.memePath != null) {
+          getApplicationDocumentsDirectory().then((docsDirectory) {
+            final onlyImageName =
+                meme.memePath!.split(Platform.pathSeparator).last;
+            final fullImagePath =
+                "${docsDirectory.absolute.path}${Platform.pathSeparator}${SaveMemeInteractor.memesPathName}${Platform.pathSeparator}$onlyImageName";
+            memePathSubject.add(fullImagePath);
+          });
+        }
       },
       onError: (error, stackTrace) =>
           print("Error in existentMemeSubscription: $error, $stackTrace"),
