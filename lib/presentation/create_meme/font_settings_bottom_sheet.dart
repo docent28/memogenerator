@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:memogenerator/presentation/create_meme/meme_text_on_canvas.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
+import 'package:memogenerator/presentation/widgets/app_button.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 
 class FontSettingBottomSheet extends StatefulWidget {
@@ -59,9 +60,41 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
               setState(() => this.color = color);
             },
           ),
+          const SizedBox(height: 36),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Buttons(),
+          ),
           const SizedBox(height: 48),
         ],
       ),
+    );
+  }
+}
+
+class Buttons extends StatelessWidget {
+  const Buttons({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AppButton(
+          onTap: () {},
+          text: "Отмена",
+          color: AppColors.darkGrey,
+        ),
+        const SizedBox(width: 24),
+        AppButton(
+          onTap: () {},
+          text: "Сохранить",
+          color: AppColors.darkGrey,
+        ),
+        const SizedBox(width: 16),
+      ],
     );
   }
 }
@@ -181,7 +214,6 @@ class _FontSizeSliderState extends State<FontSizeSlider> {
             ),
           ),
         ),
-        const SizedBox(width: 16),
       ],
     );
   }
