@@ -24,6 +24,7 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
     return Container(
       color: Colors.white,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 8),
           Center(
@@ -50,6 +51,7 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
               setState(() => fontSize = value);
             },
           ),
+          const SizedBox(height: 48),
         ],
       ),
     );
