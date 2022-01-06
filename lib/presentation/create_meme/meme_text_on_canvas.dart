@@ -9,6 +9,7 @@ class MemeTextOnCanvas extends StatelessWidget {
     required this.parentConstraints,
     required this.text,
     required this.fontSize,
+    required this.color,
   }) : super(key: key);
 
   final double padding;
@@ -16,6 +17,7 @@ class MemeTextOnCanvas extends StatelessWidget {
   final BoxConstraints parentConstraints;
   final String text;
   final double fontSize;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class MemeTextOnCanvas extends StatelessWidget {
         text,
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: Colors.black,
+          color: color,
           fontSize: fontSize,
         ),
       ),

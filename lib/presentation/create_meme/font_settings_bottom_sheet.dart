@@ -18,6 +18,7 @@ class FontSettingBottomSheet extends StatefulWidget {
 
 class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
   double fontSize = 20;
+  Color color = Colors.black;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +45,7 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
             parentConstraints: BoxConstraints.expand(),
             text: widget.memeText.text,
             fontSize: fontSize,
+            color: color,
           ),
           const SizedBox(height: 48),
           FontSizeSlider(
@@ -51,9 +53,58 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
               setState(() => fontSize = value);
             },
           ),
+          const SizedBox(height: 16),
+          ColorSelection(
+            changeColor: (color) {
+              setState(() => this.color = color);
+            },
+          ),
           const SizedBox(height: 48),
         ],
       ),
+    );
+  }
+}
+
+class ColorSelection extends StatelessWidget {
+  final ValueChanged<Color> changeColor;
+
+  const ColorSelection({
+    Key? key,
+    required this.changeColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const SizedBox(width: 16),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+            "Color:",
+            style: TextStyle(
+              fontSize: 20,
+              color: AppColors.darkGrey,
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        GestureDetector(
+          onTap: () => changeColor(Colors.white),
+          child: Container(
+            height: 32,
+            width: 32,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.black,
+                width: 1,
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 }
