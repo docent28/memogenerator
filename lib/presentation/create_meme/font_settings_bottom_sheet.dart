@@ -90,21 +90,40 @@ class ColorSelection extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 16),
-        GestureDetector(
-          onTap: () => changeColor(Colors.white),
-          child: Container(
-            height: 32,
-            width: 32,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.black,
-                width: 1,
-              ),
-            ),
-          ),
-        )
+        ColorSelectionBox(changeColor: changeColor, color: Colors.white),
+        const SizedBox(width: 16),
+        ColorSelectionBox(changeColor: changeColor, color: Colors.black),
+        const SizedBox(width: 16),
       ],
+    );
+  }
+}
+
+class ColorSelectionBox extends StatelessWidget {
+  final ValueChanged<Color> changeColor;
+  final Color color;
+
+  const ColorSelectionBox({
+    Key? key,
+    required this.changeColor,
+    required this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => changeColor(color),
+      child: Container(
+        height: 32,
+        width: 32,
+        decoration: BoxDecoration(
+          color: color,
+          border: Border.all(
+            color: Colors.black,
+            width: 1,
+          ),
+        ),
+      ),
     );
   }
 }
