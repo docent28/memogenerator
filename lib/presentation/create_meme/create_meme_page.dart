@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:memogenerator/presentation/create_meme/create_meme_bloc.dart';
+import 'package:memogenerator/presentation/create_meme/font_settings_bottom_sheet.dart';
+import 'package:memogenerator/presentation/create_meme/meme_text_on_canvas.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_with_offset.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_with_selection.dart';
@@ -253,13 +255,37 @@ class BottomMemeText extends StatelessWidget {
         height: 48,
         alignment: Alignment.centerLeft,
         color: item.selected ? AppColors.darkGrey16 : null,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Text(
-          item.memeText.text,
-          style: TextStyle(
-            fontSize: 16,
-            color: AppColors.darkGrey,
-          ),
+        child: Row(
+          children: [
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                item.memeText.text,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.darkGrey,
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return FontSettingBottomSheet(memeText: item.memeText);
+                  },
+                );
+              },
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.font_download_outlined),
+              ),
+            ),
+            const SizedBox(
+              width: 4,
+            )
+          ],
         ),
       ),
     );
@@ -434,47 +460,6 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
       return widget.parentConstraints.maxWidth - padding * 2 - 10;
     }
     return rawLeft;
-  }
-}
-
-class MemeTextOnCanvas extends StatelessWidget {
-  const MemeTextOnCanvas({
-    Key? key,
-    required this.padding,
-    required this.selected,
-    required this.parentConstraints,
-    required this.text,
-  }) : super(key: key);
-
-  final double padding;
-  final bool selected;
-  final BoxConstraints parentConstraints;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: parentConstraints.maxWidth,
-        maxHeight: parentConstraints.maxHeight,
-      ),
-      padding: EdgeInsets.all(padding),
-      decoration: BoxDecoration(
-        color: selected ? AppColors.darkGrey16 : null,
-        border: Border.all(
-          color: selected ? AppColors.fuchsia : Colors.transparent,
-          width: 1,
-        ),
-      ),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 24,
-        ),
-      ),
-    );
   }
 }
 
