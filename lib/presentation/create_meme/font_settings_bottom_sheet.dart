@@ -77,16 +77,14 @@ class ColorSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const SizedBox(width: 16),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Text(
-            "Color:",
-            style: TextStyle(
-              fontSize: 20,
-              color: AppColors.darkGrey,
-            ),
+        Text(
+          "Color:",
+          style: TextStyle(
+            fontSize: 20,
+            color: AppColors.darkGrey,
           ),
         ),
         const SizedBox(width: 16),
