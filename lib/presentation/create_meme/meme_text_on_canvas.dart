@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:memogenerator/resources/app_colors.dart';
 
@@ -9,12 +8,14 @@ class MemeTextOnCanvas extends StatelessWidget {
     required this.selected,
     required this.parentConstraints,
     required this.text,
+    required this.fontSize,
   }) : super(key: key);
 
   final double padding;
   final bool selected;
   final BoxConstraints parentConstraints;
   final String text;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class MemeTextOnCanvas extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.black,
-          fontSize: 24,
+          fontSize: fontSize,
         ),
       ),
     );

@@ -42,9 +42,14 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
             selected: true,
             parentConstraints: BoxConstraints.expand(),
             text: widget.memeText.text,
+            fontSize: fontSize,
           ),
           const SizedBox(height: 48),
-          FontSizeSlider(),
+          FontSizeSlider(
+            changeFontSize: (value) {
+              setState(() => fontSize = value);
+            },
+          ),
         ],
       ),
     );
@@ -54,7 +59,10 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
 class FontSizeSlider extends StatefulWidget {
   const FontSizeSlider({
     Key? key,
+    required this.changeFontSize,
   }) : super(key: key);
+
+  final ValueChanged<double> changeFontSize;
 
   @override
   State<FontSizeSlider> createState() => _FontSizeSliderState();
@@ -95,7 +103,10 @@ class _FontSizeSliderState extends State<FontSizeSlider> {
               label: fontSize.round().toString(),
               value: fontSize,
               onChanged: (double value) {
-                setState(() => fontSize = value);
+                setState(() {
+                  fontSize = value;
+                  widget.changeFontSize(value);
+                });
               },
             ),
           ),
