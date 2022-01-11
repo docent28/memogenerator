@@ -10,8 +10,9 @@ class TextWithPosition extends Equatable {
   final String id;
   final String text;
   final Position position;
-  final double fontSize;
-  final Color color;
+  final double? fontSize;
+  @JsonKey(toJson: colorToJson, fromJson: colorFromJson)
+  final Color? color;
 
   TextWithPosition({
     required this.id,
@@ -28,4 +29,14 @@ class TextWithPosition extends Equatable {
 
   @override
   List<Object?> get props => [id, text, position, fontSize, color];
+}
+
+String? colorToJson(final Color? color) {
+  return color == null ? null : color.value.toRadixString(16);
+}
+
+Color? colorFromJson(final String? colorString) {
+  if (colorString == null) return null;
+  final intColor = int.tryParse(colorString, radix: 16);
+  return intColor == null ? null : Color(intColor);
 }
