@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:memogenerator/presentation/create_meme/create_meme_bloc.dart';
 import 'package:memogenerator/presentation/create_meme/meme_text_on_canvas.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
 import 'package:memogenerator/presentation/widgets/app_button.dart';
 import 'package:memogenerator/resources/app_colors.dart';
+import 'package:provider/provider.dart';
 
 class FontSettingBottomSheet extends StatefulWidget {
   final MemeText memeText;
@@ -63,7 +64,11 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
           const SizedBox(height: 36),
           Align(
             alignment: Alignment.centerRight,
-            child: Buttons(),
+            child: Buttons(
+              textId: widget.memeText.id,
+              color: color,
+              fontSize: fontSize,
+            ),
           ),
           const SizedBox(height: 48),
         ],
@@ -73,23 +78,34 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
 }
 
 class Buttons extends StatelessWidget {
+  final String textId;
+  final Color color;
+  final double fontSize;
+
   const Buttons({
     Key? key,
+    required this.textId,
+    required this.color,
+    required this.fontSize,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         AppButton(
-          onTap: () {},
+          onTap: () => Navigator.of(context).pop(),
           text: "Отмена",
           color: AppColors.darkGrey,
         ),
         const SizedBox(width: 24),
         AppButton(
-          onTap: () {},
+          onTap: () {
+            bloc.changeFontSettings(textId, color, fontSize);
+            Navigator.of(context).pop();
+          },
           text: "Сохранить",
           color: AppColors.darkGrey,
         ),

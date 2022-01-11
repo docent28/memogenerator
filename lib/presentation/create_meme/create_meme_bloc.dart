@@ -96,6 +96,25 @@ class CreateMemeBloc {
         );
   }
 
+  void changeFontSettings(
+    final String textId,
+    final Color color,
+    final double fontSize,
+  ) {
+    final copiedList = [...memeTextsSubject.value];
+    final index = copiedList.indexWhere((memeText) => memeText.id == id);
+    if (index == -1) {
+      return;
+    }
+    final oldMemeText = copiedList[index];
+    copiedList.removeAt(index);
+    copiedList.insert(
+      index,
+      oldMemeText.copyWithChangedFontSettings(color, fontSize),
+    );
+    memeTextsSubject.add(copiedList);
+  }
+
   void saveMeme() {
     final memeTexts = memeTextsSubject.value;
     final memeTextOffsets = memeTextOffsetsSubject.value;
