@@ -19,8 +19,15 @@ class FontSettingBottomSheet extends StatefulWidget {
 }
 
 class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
-  double fontSize = 20;
-  Color color = Colors.black;
+  late double fontSize;
+  late Color color;
+
+  @override
+  void initState() {
+    super.initState();
+      fontSize = widget.memeText.fontSize;
+      color = widget.memeText.color;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +58,7 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
           ),
           const SizedBox(height: 48),
           FontSizeSlider(
+            initialFontSize: fontSize,
             changeFontSize: (value) {
               setState(() => fontSize = value);
             },
@@ -179,16 +187,24 @@ class FontSizeSlider extends StatefulWidget {
   const FontSizeSlider({
     Key? key,
     required this.changeFontSize,
+    required this.initialFontSize,
   }) : super(key: key);
 
   final ValueChanged<double> changeFontSize;
+  final double initialFontSize;
 
   @override
   State<FontSizeSlider> createState() => _FontSizeSliderState();
 }
 
 class _FontSizeSliderState extends State<FontSizeSlider> {
-  double fontSize = 20;
+  late double fontSize;
+
+  @override
+  void initState() {
+    super.initState();
+    fontSize = widget.initialFontSize;
+  }
 
   @override
   Widget build(BuildContext context) {
