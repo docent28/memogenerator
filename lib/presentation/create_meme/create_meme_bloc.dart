@@ -54,7 +54,6 @@ class CreateMemeBloc {
         if (meme == null) {
           return;
         }
-        print("Got meme in constructor: $meme");
         final memeTexts = meme.texts.map((textWithPosition) {
           return MemeText.createFromTextWithPosition(textWithPosition);
         }).toList();
@@ -102,7 +101,7 @@ class CreateMemeBloc {
     final double fontSize,
   ) {
     final copiedList = [...memeTextsSubject.value];
-    final index = copiedList.indexWhere((memeText) => memeText.id == id);
+    final index = copiedList.indexWhere((memeText) => memeText.id == textId);
     if (index == -1) {
       return;
     }
@@ -227,8 +226,7 @@ class CreateMemeBloc {
           return element.id == memeText.id;
         });
         return MemeTextWithOffset(
-          id: memeText.id,
-          text: memeText.text,
+          memeText: memeText,
           offset: memeTextOffset?.offset,
         );
       }).toList();

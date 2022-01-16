@@ -208,7 +208,7 @@ class BottomList extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               if (index == 0) {
                 return AppButton(
-                  onTap: ()=> bloc.addNewText(),
+                  onTap: () => bloc.addNewText(),
                   text: "Добавить текст",
                   icon: Icons.add,
                 );
@@ -278,7 +278,10 @@ class BottomMemeText extends StatelessWidget {
                 showModalBottomSheet(
                   context: context,
                   builder: (context) {
-                    return FontSettingBottomSheet(memeText: item.memeText);
+                    return Provider.value(
+                      value: bloc,
+                      child: FontSettingBottomSheet(memeText: item.memeText),
+                    );
                   },
                 );
               },
@@ -404,7 +407,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
         final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
         bloc.changeMemeTextOffset(
-          widget.memeTextWithOffset.id,
+          widget.memeTextWithOffset.memeText.id,
           Offset(left, top),
         );
       });
@@ -419,28 +422,31 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
       left: left,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => bloc.selectMemeText(widget.memeTextWithOffset.id),
+        onTap: () => bloc.selectMemeText(widget.memeTextWithOffset.memeText.id),
         onPanUpdate: (details) {
-          bloc.selectMemeText(widget.memeTextWithOffset.id);
+          bloc.selectMemeText(widget.memeTextWithOffset.memeText.id);
           setState(() {
             left = calculateLeft(details);
             top = calculateTop(details);
             bloc.changeMemeTextOffset(
-                widget.memeTextWithOffset.id, Offset(left, top));
+              widget.memeTextWithOffset.memeText.id,
+              Offset(left, top),
+            );
           });
         },
         child: StreamBuilder<MemeText?>(
             stream: bloc.observeSelectedMemeText(),
             builder: (context, snapshot) {
               final selectedItem = snapshot.hasData ? snapshot.data : null;
-              final selected = widget.memeTextWithOffset.id == selectedItem?.id;
+              final selected =
+                  widget.memeTextWithOffset.memeText.id == selectedItem?.id;
               return MemeTextOnCanvas(
                 padding: padding,
                 selected: selected,
                 parentConstraints: widget.parentConstraints,
-                text: widget.memeTextWithOffset.text,
-                fontSize: 24,
-                color: Colors.black,
+                text: widget.memeTextWithOffset.memeText.text,
+                fontSize: widget.memeTextWithOffset.memeText.fontSize,
+                color: widget.memeTextWithOffset.memeText.color,
               );
             }),
       ),
