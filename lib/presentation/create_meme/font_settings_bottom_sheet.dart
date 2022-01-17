@@ -25,8 +25,8 @@ class _FontSettingBottomSheetState extends State<FontSettingBottomSheet> {
   @override
   void initState() {
     super.initState();
-      fontSize = widget.memeText.fontSize;
-      color = widget.memeText.color;
+    fontSize = widget.memeText.fontSize;
+    color = widget.memeText.color;
   }
 
   @override
