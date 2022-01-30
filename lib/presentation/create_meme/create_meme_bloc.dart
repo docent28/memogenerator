@@ -113,6 +113,12 @@ class CreateMemeBloc {
     memeTextsSubject.add(copiedList);
   }
 
+  void deleteMemeText(final String textId) {
+    final updateMemeTexts = [...memeTextsSubject.value];
+    updateMemeTexts.removeWhere((memeText) => memeText.id ==textId);
+    memeTextsSubject.add(updateMemeTexts);
+  }
+
   void saveMeme() {
     final memeTexts = memeTextsSubject.value;
     final memeTextOffsets = memeTextOffsetsSubject.value;

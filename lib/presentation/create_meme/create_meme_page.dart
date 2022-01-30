@@ -300,14 +300,12 @@ class BottomMemeText extends StatelessWidget {
             Expanded(
               child: Text(
                 item.memeText.text,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.darkGrey,
-                ),
+                style: TextStyle(fontSize: 16, color: AppColors.darkGrey),
               ),
             ),
             const SizedBox(width: 4),
-            GestureDetector(
+            BottomMemeTextAction(
+              icon: Icons.font_download_outlined,
               onTap: () {
                 showModalBottomSheet(
                   context: context,
@@ -324,16 +322,39 @@ class BottomMemeText extends StatelessWidget {
                   },
                 );
               },
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.font_download_outlined),
-              ),
             ),
-            const SizedBox(
-              width: 4,
-            )
+            const SizedBox(width: 4),
+            BottomMemeTextAction(
+              icon: Icons.delete_forever_outlined,
+              onTap: () {
+                bloc.deleteMemeText(item.memeText.id);
+              },
+            ),
+            const SizedBox(width: 4),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class BottomMemeTextAction extends StatelessWidget {
+  const BottomMemeTextAction({
+    Key? key,
+    required this.onTap,
+    required this.icon,
+  }) : super(key: key);
+
+  final VoidCallback onTap;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: Icon(icon),
       ),
     );
   }
